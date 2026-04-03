@@ -86,10 +86,6 @@ const vehicles = [
         { label: "Wheelbase", value: "144.3 in" }
       ]
     },
-    dimensionDrawings: [
-      { title: "Side View", src: "images/svg/sprinter-side.svg" },
-      { title: "Rear View", src: "images/svg/sprinter-rear.svg" }
-    ]
   },
   {
     id: 2,
@@ -159,10 +155,6 @@ const vehicles = [
         { label: "Wheelbase", value: "144.5 in" }
       ]
     },
-    dimensionDrawings: [
-      { title: "Side View", src: "images/svg/ram-side.svg" },
-      { title: "Bed Top View", src: "images/svg/ram-bed.svg" }
-    ]
   },
   {
     id: 3,
@@ -224,10 +216,6 @@ const vehicles = [
         { label: "Ground Clearance", value: "~15 in" }
       ]
     },
-    dimensionDrawings: [
-      { title: "Side View", src: "images/svg/keystone-side.svg" },
-      { title: "Floor Plan", src: "images/svg/keystone-floor.svg" }
-    ]
   }
 ];
 
