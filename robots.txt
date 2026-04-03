@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://overlandrouteco.com/sitemap.xml
+
+# Disallow admin or private paths (add as needed)
+# Disallow: /admin/

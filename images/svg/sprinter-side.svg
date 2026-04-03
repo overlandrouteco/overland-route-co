@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="'Courier New', monospace" fill="none" stroke="#c7622a" stroke-width="1">
+  <title>2022 Mercedes-Benz Sprinter 4x4 — Side View Dimensions</title>
+  <rect width="800" height="500" fill="#1a1a1a"/>
+  <text x="400" y="30" text-anchor="middle" fill="#f5f0e8" font-size="14" font-weight="bold" stroke="none">2022 MERCEDES-BENZ SPRINTER 4x4 — SIDE VIEW</text>
+
+  <!-- Vehicle outline — simplified side profile -->
+  <g transform="translate(120,80)">
+    <!-- Main body -->
+    <path d="M60,280 L60,120 Q60,60 120,50 L420,50 Q440,50 445,55 L480,80 L500,80 L500,120 L520,120 L520,280" stroke="#c7622a" stroke-width="2" fill="none"/>
+    <!-- Windshield -->
+    <line x1="445" y1="55" x2="500" y2="80" stroke="#c7622a" stroke-width="2"/>
+    <!-- Roof line -->
+    <line x1="60" y1="50" x2="420" y2="50" stroke="#c7622a" stroke-width="1.5"/>
+    <!-- Floor line -->
+    <line x1="60" y1="280" x2="520" y2="280" stroke="#c7622a" stroke-width="2"/>
+    <!-- Side door -->
+    <rect x="160" y="100" width="60" height="170" stroke="#c7622a" stroke-width="1" stroke-dasharray="4,2"/>
+    <!-- Rear door -->
+    <rect x="60" y="60" width="5" height="215" stroke="#c7622a" stroke-width="1.5"/>
+    <!-- Front wheel -->
+    <circle cx="440" cy="300" r="30" stroke="#c7622a" stroke-width="2"/>
+    <circle cx="440" cy="300" r="12" stroke="#c7622a" stroke-width="1"/>
+    <!-- Rear wheel -->
+    <circle cx="140" cy="300" r="30" stroke="#c7622a" stroke-width="2"/>
+    <circle cx="140" cy="300" r="12" stroke="#c7622a" stroke-width="1"/>
+    <!-- Ground line -->
+    <line x1="20" y1="330" x2="560" y2="330" stroke="#555" stroke-width="0.5" stroke-dasharray="6,3"/>
+
+    <!-- === DIMENSION LINES === -->
+
+    <!-- Overall Length: 233.5" -->
+    <line x1="40" y1="370" x2="540" y2="370" stroke="#f5f0e8" stroke-width="0.8"/>
+    <polygon points="40,370 48,367 48,373" fill="#f5f0e8" stroke="none"/>
+    <polygon points="540,370 532,367 532,373" fill="#f5f0e8" stroke="none"/>
+    <line x1="40" y1="335" x2="40" y2="375" stroke="#f5f0e8" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <line x1="540" y1="335" x2="540" y2="375" stroke="#f5f0e8" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <text x="290" y="388" text-anchor="middle" fill="#f5f0e8" font-size="11" stroke="none">233.5" (OVERALL LENGTH)</text>
+
+    <!-- Height: 107.3" -->
+    <line x1="580" y1="30" x2="580" y2="330" stroke="#f5f0e8" stroke-width="0.8"/>
+    <polygon points="580,30 577,38 583,38" fill="#f5f0e8" stroke="none"/>
+    <polygon points="580,330 577,322 583,322" fill="#f5f0e8" stroke="none"/>
+    <line x1="525" y1="30" x2="585" y2="30" stroke="#f5f0e8" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <text x="586" y="185" fill="#f5f0e8" font-size="10" stroke="none" transform="rotate(90,586,185)">107.3" (HEIGHT)</text>
+
+    <!-- Wheelbase: 144" -->
+    <line x1="140" y1="340" x2="440" y2="340" stroke="#d4c5a9" stroke-width="0.8"/>
+    <polygon points="140,340 148,337 148,343" fill="#d4c5a9" stroke="none"/>
+    <polygon points="440,340 432,337 432,343" fill="#d4c5a9" stroke="none"/>
+    <text x="290" y="355" text-anchor="middle" fill="#d4c5a9" font-size="10" stroke="none">144" WHEELBASE</text>
+
+    <!-- Ground Clearance: 7.1" -->
+    <line x1="290" y1="310" x2="290" y2="330" stroke="#d4c5a9" stroke-width="0.8"/>
+    <polygon points="290,310 287,316 293,316" fill="#d4c5a9" stroke="none"/>
+    <polygon points="290,330 287,324 293,324" fill="#d4c5a9" stroke="none"/>
+    <text x="330" y="324" fill="#d4c5a9" font-size="9" stroke="none">7.1" GND CLR</text>
+
+    <!-- Cargo Length: 126" (interior) -->
+    <line x1="65" y1="100" x2="395" y2="100" stroke="#3d5a3e" stroke-width="0.8"/>
+    <polygon points="65,100 73,97 73,103" fill="#3d5a3e" stroke="none"/>
+    <polygon points="395,100 387,97 387,103" fill="#3d5a3e" stroke="none"/>
+    <text x="230" y="95" text-anchor="middle" fill="#3d5a3e" font-size="9" stroke="none">126" CARGO LENGTH (INT)</text>
+
+    <!-- Load Floor Height: 28.3" -->
+    <line x1="30" y1="280" x2="30" y2="330" stroke="#3d5a3e" stroke-width="0.8"/>
+    <polygon points="30,280 27,288 33,288" fill="#3d5a3e" stroke="none"/>
+    <polygon points="30,330 27,322 33,322" fill="#3d5a3e" stroke="none"/>
+    <text x="5" y="310" fill="#3d5a3e" font-size="8" stroke="none" transform="rotate(-90,20,310)">28.3" LOAD FLR</text>
+
+    <!-- Side Door: 51.2" x 72.8" label -->
+    <text x="190" y="190" text-anchor="middle" fill="#555" font-size="8" stroke="none">SIDE DOOR</text>
+    <text x="190" y="200" text-anchor="middle" fill="#555" font-size="8" stroke="none">51.2" x 72.8"</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(20,460)">
+    <line x1="0" y1="0" x2="20" y2="0" stroke="#f5f0e8" stroke-width="1"/>
+    <text x="25" y="4" fill="#f5f0e8" font-size="9" stroke="none">Exterior</text>
+    <line x1="100" y1="0" x2="120" y2="0" stroke="#d4c5a9" stroke-width="1"/>
+    <text x="125" y="4" fill="#d4c5a9" font-size="9" stroke="none">Chassis</text>
+    <line x1="200" y1="0" x2="220" y2="0" stroke="#3d5a3e" stroke-width="1"/>
+    <text x="225" y="4" fill="#3d5a3e" font-size="9" stroke="none">Interior/Cargo</text>
+    <text x="500" y="4" fill="#555" font-size="8" stroke="none">All dimensions approximate. Verify before upfit planning.</text>
+  </g>
+</svg>

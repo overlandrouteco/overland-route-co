@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "WebSearch",
+      "WebFetch(domain:www.rvguide.com)",
+      "WebFetch(domain:www.rvusa.com)",
+      "WebFetch(domain:www.jdpower.com)",
+      "Bash(curl:*)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(ls:*)"
+    ]
+  }
+}

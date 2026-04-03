@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="'Courier New', monospace" fill="none" stroke="#c7622a" stroke-width="1">
+  <title>2022 Ram 1500 Rebel 4x4 — Side View Dimensions</title>
+  <rect width="800" height="480" fill="#1a1a1a"/>
+  <text x="400" y="28" text-anchor="middle" fill="#f5f0e8" font-size="14" font-weight="bold" stroke="none">2022 RAM 1500 REBEL 4x4 — SIDE VIEW</text>
+
+  <g transform="translate(100,60)">
+    <!-- Truck body outline -->
+    <!-- Bed -->
+    <path d="M30,200 L30,100 L40,95 L220,95 L220,200" stroke="#c7622a" stroke-width="2" fill="none"/>
+    <!-- Cab -->
+    <path d="M220,200 L220,80 Q222,70 230,65 L290,45 Q300,42 310,42 L380,42 L400,42 Q420,42 425,55 L440,85 L480,85 L480,120 L500,120 L500,200" stroke="#c7622a" stroke-width="2" fill="none"/>
+    <!-- Windshield -->
+    <line x1="425" y1="55" x2="480" y2="85" stroke="#c7622a" stroke-width="1.5"/>
+    <!-- Rear window -->
+    <line x1="230" y1="65" x2="222" y2="80" stroke="#c7622a" stroke-width="1.5"/>
+    <!-- Cab roof -->
+    <line x1="290" y1="42" x2="400" y2="42" stroke="#c7622a" stroke-width="2"/>
+    <!-- Bed floor -->
+    <line x1="40" y1="200" x2="220" y2="200" stroke="#c7622a" stroke-width="1"/>
+    <!-- Tailgate -->
+    <line x1="30" y1="100" x2="30" y2="200" stroke="#c7622a" stroke-width="2"/>
+    <!-- Frame rail -->
+    <line x1="30" y1="220" x2="500" y2="220" stroke="#c7622a" stroke-width="1.5"/>
+    <!-- Front wheel -->
+    <circle cx="420" cy="245" r="35" stroke="#c7622a" stroke-width="2"/>
+    <circle cx="420" cy="245" r="14" stroke="#c7622a" stroke-width="1"/>
+    <!-- Rear wheel -->
+    <circle cx="120" cy="245" r="35" stroke="#c7622a" stroke-width="2"/>
+    <circle cx="120" cy="245" r="14" stroke="#c7622a" stroke-width="1"/>
+    <!-- Ground line -->
+    <line x1="-10" y1="280" x2="550" y2="280" stroke="#555" stroke-width="0.5" stroke-dasharray="6,3"/>
+
+    <!-- === DIMENSION LINES === -->
+
+    <!-- Overall Length: 232.9" -->
+    <line x1="10" y1="320" x2="520" y2="320" stroke="#f5f0e8" stroke-width="0.8"/>
+    <polygon points="10,320 18,317 18,323" fill="#f5f0e8" stroke="none"/>
+    <polygon points="520,320 512,317 512,323" fill="#f5f0e8" stroke="none"/>
+    <line x1="10" y1="285" x2="10" y2="325" stroke="#f5f0e8" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <line x1="520" y1="285" x2="520" y2="325" stroke="#f5f0e8" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <text x="265" y="338" text-anchor="middle" fill="#f5f0e8" font-size="11" stroke="none">232.9" (OVERALL LENGTH)</text>
+
+    <!-- Height: 77.6" -->
+    <line x1="555" y1="30" x2="555" y2="280" stroke="#f5f0e8" stroke-width="0.8"/>
+    <polygon points="555,30 552,38 558,38" fill="#f5f0e8" stroke="none"/>
+    <polygon points="555,280 552,272 558,272" fill="#f5f0e8" stroke="none"/>
+    <line x1="505" y1="30" x2="560" y2="30" stroke="#f5f0e8" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <text x="562" y="160" fill="#f5f0e8" font-size="10" stroke="none" transform="rotate(90,562,160)">77.6" (HEIGHT)</text>
+
+    <!-- Wheelbase: 144.5" -->
+    <line x1="120" y1="290" x2="420" y2="290" stroke="#d4c5a9" stroke-width="0.8"/>
+    <polygon points="120,290 128,287 128,293" fill="#d4c5a9" stroke="none"/>
+    <polygon points="420,290 412,287 412,293" fill="#d4c5a9" stroke="none"/>
+    <text x="270" y="305" text-anchor="middle" fill="#d4c5a9" font-size="10" stroke="none">144.5" WHEELBASE</text>
+
+    <!-- Ground Clearance: 10.7" -->
+    <line x1="270" y1="252" x2="270" y2="280" stroke="#d4c5a9" stroke-width="0.8"/>
+    <polygon points="270,252 267,258 273,258" fill="#d4c5a9" stroke="none"/>
+    <polygon points="270,280 267,274 273,274" fill="#d4c5a9" stroke="none"/>
+    <text x="310" y="272" fill="#d4c5a9" font-size="9" stroke="none">10.7" GND CLR</text>
+
+    <!-- Bed Length: 67.4" -->
+    <line x1="40" y1="88" x2="218" y2="88" stroke="#3d5a3e" stroke-width="0.8"/>
+    <polygon points="40,88 48,85 48,91" fill="#3d5a3e" stroke="none"/>
+    <polygon points="218,88 210,85 210,91" fill="#3d5a3e" stroke="none"/>
+    <text x="129" y="82" text-anchor="middle" fill="#3d5a3e" font-size="9" stroke="none">67.4" BED LENGTH</text>
+
+    <!-- Bed Depth: 19.9" -->
+    <line x1="15" y1="100" x2="15" y2="200" stroke="#3d5a3e" stroke-width="0.8"/>
+    <polygon points="15,100 12,108 18,108" fill="#3d5a3e" stroke="none"/>
+    <polygon points="15,200 12,192 18,192" fill="#3d5a3e" stroke="none"/>
+    <text x="5" y="155" fill="#3d5a3e" font-size="8" stroke="none" transform="rotate(-90,8,155)">19.9" DEPTH</text>
+
+    <!-- Approach angle -->
+    <line x1="480" y1="280" x2="520" y2="236" stroke="#d4c5a9" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <text x="510" y="225" fill="#d4c5a9" font-size="8" stroke="none">24.2°</text>
+    <text x="510" y="234" fill="#555" font-size="7" stroke="none">APPROACH</text>
+
+    <!-- Departure angle -->
+    <line x1="30" y1="280" x2="10" y2="248" stroke="#d4c5a9" stroke-width="0.7" stroke-dasharray="3,2"/>
+    <text x="-5" y="240" fill="#d4c5a9" font-size="8" stroke="none">23.0°</text>
+    <text x="-5" y="249" fill="#555" font-size="7" stroke="none">DEPART</text>
+  </g>
+
+  <g transform="translate(20,440)">
+    <line x1="0" y1="0" x2="20" y2="0" stroke="#f5f0e8" stroke-width="1"/>
+    <text x="25" y="4" fill="#f5f0e8" font-size="9" stroke="none">Exterior</text>
+    <line x1="100" y1="0" x2="120" y2="0" stroke="#d4c5a9" stroke-width="1"/>
+    <text x="125" y="4" fill="#d4c5a9" font-size="9" stroke="none">Chassis/Angles</text>
+    <line x1="250" y1="0" x2="270" y2="0" stroke="#3d5a3e" stroke-width="1"/>
+    <text x="275" y="4" fill="#3d5a3e" font-size="9" stroke="none">Bed Dimensions</text>
+    <text x="500" y="4" fill="#555" font-size="8" stroke="none">All dimensions approximate.</text>
+  </g>
+</svg>

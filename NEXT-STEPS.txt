@@ -1,0 +1,73 @@
+=======================================
+OVERLAND ROUTE CO. — NEXT STEPS
+Post-Launch Checklist
+=======================================
+
+Complete these items after the website goes live:
+
+BUSINESS SETUP
+--------------
+a. Create Google Business Profile for Overland Route Co. in Fairfield, CA
+   - Go to: https://business.google.com
+   - Add business name, address, phone, hours, photos
+   - This is critical for local search visibility
+
+b. Set up social media accounts:
+   - Instagram: @overlandrouteco
+   - Facebook: facebook.com/overlandrouteco
+   - YouTube: youtube.com/@overlandrouteco
+   - TikTok: @overlandrouteco
+   - Update the social links in the website footer once accounts are live
+
+c. Register for Amazon Associates affiliate program for the Shop page
+   - Go to: https://affiliate-program.amazon.com
+   - Once approved, replace all "#" links in js/products.js with your affiliate links
+
+d. Apply for BAR/ARD registration at bar.ca.gov
+   - Required before offering any repair or maintenance services
+   - Once obtained, add registration number to the footer where the HTML comment is
+
+e. Get business license from City of Fairfield
+   - Contact: Fairfield City Hall, Business License Division
+
+f. Get seller's permit from CA Board of Equalization (CDTFA)
+   - Required for selling vehicles in California
+   - Apply at: https://www.cdtfa.ca.gov
+
+g. Consider dealer license from CA DMV if buying/selling vehicles regularly
+   - Required if selling more than 5 vehicles per year
+   - Apply through CA DMV Occupational Licensing
+
+WEBSITE & ANALYTICS
+-------------------
+h. Set up Google Analytics
+   - Create a GA4 property at https://analytics.google.com
+   - Get your Measurement ID (G-XXXXXXXXXX)
+   - Add it to js/main.js where it says "YOUR TRACKING ID HERE"
+
+i. Set up Google Search Console and submit sitemap.xml
+   - Go to: https://search.google.com/search-console
+   - Verify ownership of overlandrouteco.com
+   - Submit: https://overlandrouteco.com/sitemap.xml
+
+j. Connect email service (Mailchimp) for newsletter signups
+   - Create a Mailchimp account at https://mailchimp.com
+   - Replace the newsletter form in the footer with Mailchimp's embedded form
+   - Newsletter signups are currently stored in browser localStorage as a temporary measure
+
+INSURANCE & LEGAL
+-----------------
+k. Get business insurance:
+   - General liability insurance
+   - Garage keeper's insurance (if storing customer vehicles)
+   - Commercial auto insurance
+   - Errors & omissions (for appraisal services)
+
+l. Set up a business bank account
+   - Keep business and personal finances separate
+   - Needed for processing vehicle sales and service payments
+
+m. Consider forming an LLC for liability protection
+   - File with California Secretary of State
+   - Consider consulting with a business attorney
+   - An LLC protects personal assets from business liabilities
