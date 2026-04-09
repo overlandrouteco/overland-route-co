@@ -33,9 +33,9 @@
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Google reCAPTCHA v2 -->
+  <!-- Google reCAPTCHA v2 - TEMPORARILY DISABLED for Netlify form testing -->
   <!-- To get your own reCAPTCHA keys go to https://www.google.com/recaptcha/admin and register your domain overlandrouteco.com -->
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
   <!-- Schema.org LocalBusiness -->
   <script type="application/ld+json">
   {
@@ -185,7 +185,7 @@
             </div>
             <div class="form-group">
               <label for="email">Email *</label>
-              <input type="email" id="email" name="email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="you@example.com">
+              <input type="email" id="email" name="email" required placeholder="you@example.com">
             </div>
             <div class="form-group">
               <label for="subject">What Can We Help With?</label>
@@ -203,12 +203,13 @@
               <label for="message">Message *</label>
               <textarea id="message" name="message" required placeholder="Tell us about your project, the vehicle you're interested in, or how we can help..." maxlength="5000"></textarea>
             </div>
-            <!-- Google reCAPTCHA v2 widget -->
-            <!-- Replace with your reCAPTCHA site key from https://www.google.com/recaptcha/admin -->
+            <!-- Google reCAPTCHA v2 widget - TEMPORARILY DISABLED for Netlify form testing -->
+            <!--
             <div class="form-group recaptcha-wrap">
               <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
             </div>
-            <button type="submit" class="btn btn-primary">Send Message</button>
+            -->
+            <button type="submit" class="btn btn-primary">SEND MESSAGE</button>
           </form>
         </div>
 

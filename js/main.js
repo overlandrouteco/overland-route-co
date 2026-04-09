@@ -319,7 +319,7 @@ function initFormValidation() {
      HTML5 native validation does not interfere. We do NOT attach a submit
      event listener — submission happens via the button's onclick → handleSubmit
      pattern, which calls form.submit() directly after validation passes.
-     NOTE: form[name="contact"] is intentionally excluded — that form is
+     NOTE: form[name="contact-form"] is intentionally excluded — that form is
      currently being tested with zero JavaScript touching its submission. */
   document.querySelectorAll('form[name="quote-request"], form[name="vehicle-inquiry"]').forEach(form => {
     form.noValidate = true;

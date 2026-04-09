@@ -575,16 +575,16 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.5rem); margin-bottom: 12px; }
    ============================================ */
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
 /* Netlify message forms — selected by name so the form tags can stay clean */
-form[name="contact"] .form-group,
+form[name="contact-form"] .form-group,
 form[name="quote-request"] .form-group,
 form[name="vehicle-inquiry"] .form-group { margin-bottom: 20px; }
-form[name="contact"] label,
+form[name="contact-form"] label,
 form[name="quote-request"] label,
 form[name="vehicle-inquiry"] label {
   display: block; font-family: var(--font-heading); font-size: 0.85rem;
   text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; color: var(--sand);
 }
-form[name="contact"] input, form[name="contact"] textarea, form[name="contact"] select,
+form[name="contact-form"] input, form[name="contact-form"] textarea, form[name="contact-form"] select,
 form[name="quote-request"] input, form[name="quote-request"] textarea, form[name="quote-request"] select,
 form[name="vehicle-inquiry"] input, form[name="vehicle-inquiry"] textarea, form[name="vehicle-inquiry"] select {
   width: 100%; padding: 12px 16px;
@@ -592,18 +592,18 @@ form[name="vehicle-inquiry"] input, form[name="vehicle-inquiry"] textarea, form[
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 6px; color: var(--text);
 }
-form[name="contact"] input:focus, form[name="contact"] textarea:focus, form[name="contact"] select:focus,
+form[name="contact-form"] input:focus, form[name="contact-form"] textarea:focus, form[name="contact-form"] select:focus,
 form[name="quote-request"] input:focus, form[name="quote-request"] textarea:focus, form[name="quote-request"] select:focus,
 form[name="vehicle-inquiry"] input:focus, form[name="vehicle-inquiry"] textarea:focus, form[name="vehicle-inquiry"] select:focus {
   outline: none; border-color: var(--accent);
 }
-form[name="contact"] textarea,
+form[name="contact-form"] textarea,
 form[name="quote-request"] textarea,
 form[name="vehicle-inquiry"] textarea { min-height: 140px; resize: vertical; }
 /* Highlight required fields after the user has interacted with the form */
-form[name="contact"] input:user-invalid,
-form[name="contact"] textarea:user-invalid,
-form[name="contact"] select:user-invalid,
+form[name="contact-form"] input:user-invalid,
+form[name="contact-form"] textarea:user-invalid,
+form[name="contact-form"] select:user-invalid,
 form[name="quote-request"] input:user-invalid,
 form[name="quote-request"] textarea:user-invalid,
 form[name="quote-request"] select:user-invalid,
@@ -615,9 +615,9 @@ form[name="vehicle-inquiry"] select:user-invalid,
   background: rgba(192,57,43,0.08);
 }
 /* JS-driven validation error states */
-form[name="contact"] input.has-error,
-form[name="contact"] textarea.has-error,
-form[name="contact"] select.has-error,
+form[name="contact-form"] input.has-error,
+form[name="contact-form"] textarea.has-error,
+form[name="contact-form"] select.has-error,
 form[name="quote-request"] input.has-error,
 form[name="quote-request"] textarea.has-error,
 form[name="quote-request"] select.has-error,
