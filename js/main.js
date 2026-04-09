@@ -277,18 +277,13 @@ function validateContactForm(form) {
         return;
       }
     }
-    if (field.type === 'tel' && value) {
-      if (!validatePhone(value)) {
-        showFieldError(field, 'Please enter a valid phone number');
-        valid = false;
-        if (!firstInvalid) firstInvalid = field;
-        return;
-      }
-    }
+    /* Phone fields are validated only by their `required` attribute —
+       no format check, since users enter phone numbers in many shapes. */
   });
 
-  /* reCAPTCHA validation */
-  const recaptcha = form.querySelector('.g-recaptcha');
+  /* reCAPTCHA validation. Matches both vanilla Google reCAPTCHA (.g-recaptcha)
+     and Netlify's built-in reCAPTCHA ([data-netlify-recaptcha="true"]). */
+  const recaptcha = form.querySelector('.g-recaptcha, [data-netlify-recaptcha="true"]');
   if (recaptcha && typeof grecaptcha !== 'undefined') {
     let response = '';
     try { response = grecaptcha.getResponse(); } catch (e) { response = ''; }
@@ -331,11 +326,30 @@ function validateContactForm(form) {
 }
 
 function initFormValidation() {
-  /* TEMPORARILY DISABLED. The contact-form, quote-request, and
-     vehicle-inquiry forms are submitting natively to Netlify with zero
-     JavaScript touching them. validateContactForm() below is preserved
-     as dead code so we can re-wire it once all forms are confirmed working
-     in the Netlify dashboard. */
+  /* Contact form only — quote-request and vehicle-inquiry are still
+     submitting natively without JS while we confirm they land in Netlify. */
+  document.querySelectorAll('form[name="contact-form"]').forEach(form => {
+    form.noValidate = true;
+
+    form.addEventListener('submit', (e) => {
+      if (validateContactForm(form) !== true) {
+        e.preventDefault();
+        return;
+      }
+      /* Validation passed — track the submission, then let the browser
+         POST natively to Netlify. We do NOT call preventDefault here. */
+      trackEvent('form_submit', {
+        form_name: form.getAttribute('name') || 'unknown',
+        submitted_from: (form.querySelector('[name="submitted-from"]') || {}).value || ''
+      });
+    });
+
+    /* Live-clear errors as the user fixes them */
+    form.querySelectorAll('input, textarea, select').forEach(field => {
+      field.addEventListener('input', () => clearFieldError(field));
+      field.addEventListener('change', () => clearFieldError(field));
+    });
+  });
 }
 
 /* ---- Cookie Consent ---- */
