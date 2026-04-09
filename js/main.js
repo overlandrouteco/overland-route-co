@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initTextUsButton();
   initScrollHeader();
   initScrollIndicator();
-  initFormValidationHighlight();
   initFormValidation();
   initAnalyticsTracking();
 
@@ -205,18 +204,8 @@ function initActiveNav() {
   });
 }
 
-/* ---- Form Validation Highlight ----
-   Adds a `was-submitted` class on submit attempt so :invalid styles
-   apply only after the user has tried to submit (fallback for browsers
-   without :user-invalid). */
-function initFormValidationHighlight() {
-  document.querySelectorAll('.contact-form, .newsletter-form').forEach(form => {
-    form.addEventListener('submit', () => form.classList.add('was-submitted'));
-  });
-}
-
 /* ---- Custom Form Validation ----
-   Runs on submit for .contact-form elements (contact + quote forms).
+   Runs on submit for the contact, quote-request, and vehicle-inquiry forms.
    Validates required fields, email format, phone format, and reCAPTCHA.
    Shows inline red error messages and prevents submission on failure. */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -325,19 +314,30 @@ function validateContactForm(form) {
 }
 
 function initFormValidation() {
-  document.querySelectorAll('.contact-form').forEach(form => {
-    form.addEventListener('submit', (e) => {
-      if (!validateContactForm(form)) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-      }
-    }, true); /* capture phase so this runs before other submit handlers */
+  /* Select Netlify message forms by their form name. The form tags themselves
+     stay clean (no class, no novalidate) so Netlify form detection works
+     reliably. We set noValidate at runtime so HTML5 native validation does
+     not block our custom validation. */
+  document.querySelectorAll('form[name="contact"], form[name="quote-request"], form[name="vehicle-inquiry"]').forEach(form => {
+    form.noValidate = true;
+    attachFormValidation(form);
+  });
+}
 
-    /* Live-clear errors as the user fixes them */
-    form.querySelectorAll('input, textarea, select').forEach(field => {
-      field.addEventListener('input', () => clearFieldError(field));
-      field.addEventListener('change', () => clearFieldError(field));
-    });
+function attachFormValidation(form) {
+  form.addEventListener('submit', (e) => {
+    /* validateContactForm returns true to allow native submission to Netlify,
+       false to block. We only call preventDefault on validation failure. */
+    if (validateContactForm(form) !== true) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+  }, true); /* capture phase so this runs before other submit handlers */
+
+  /* Live-clear errors as the user fixes them */
+  form.querySelectorAll('input, textarea, select').forEach(field => {
+    field.addEventListener('input', () => clearFieldError(field));
+    field.addEventListener('change', () => clearFieldError(field));
   });
 }
 
@@ -560,16 +560,15 @@ function openVehicleModal(id) {
         ${v.status === 'for-sale' ? `
           <div class="vehicle-inquiry">
             <h3>Interested? Get More Info</h3>
-            <form class="contact-form vehicle-inquiry-form" name="vehicle-inquiry" method="POST" novalidate data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
+            <form name="vehicle-inquiry" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
               <input type="hidden" name="form-name" value="vehicle-inquiry" />
-              <input type="hidden" name="bot-field" />
+              <div style="display:none"><input name="bot-field" /></div>
               <input type="hidden" name="vehicle" value="${v.title.replace(/"/g, '&quot;')}" />
               <input type="hidden" name="submitted-from" value="inventory" />
               <div class="form-group"><label>Name *</label><input type="text" name="name" required placeholder="Your name"></div>
               <div class="form-group"><label>Phone *</label><input type="tel" name="phone" required pattern="[\\d\\s().+\\-]{10,}" placeholder="(555) 123-4567"></div>
               <div class="form-group"><label>Email *</label><input type="email" name="email" required pattern="[^@\\s]+@[^@\\s]+\\.[^@\\s]+" placeholder="you@example.com"></div>
               <div class="form-group"><label>Message *</label><textarea name="message" required placeholder="Tell us what you'd like to know...">I am interested in the ${v.title}. Please send me more information.</textarea></div>
-              <div style="position:absolute;left:-9999px;" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
               <!-- Google reCAPTCHA v2 -->
               <div class="form-group recaptcha-wrap">
                 <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
@@ -595,20 +594,10 @@ function openVehicleModal(id) {
   /* Wire up the dynamically inserted vehicle inquiry form for validation
      and reCAPTCHA. Forms inserted after DOMContentLoaded are not picked up
      by initFormValidation, so we attach handlers here. */
-  const inquiryForm = modal.querySelector('.vehicle-inquiry-form');
+  const inquiryForm = modal.querySelector('form[name="vehicle-inquiry"]');
   if (inquiryForm) {
-    inquiryForm.addEventListener('submit', (e) => {
-      if (!validateContactForm(inquiryForm)) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-      } else {
-        trackEvent('form_submit', { form_name: 'vehicle-inquiry', vehicle: v.title });
-      }
-    }, true);
-    inquiryForm.querySelectorAll('input, textarea, select').forEach(field => {
-      field.addEventListener('input', () => clearFieldError(field));
-      field.addEventListener('change', () => clearFieldError(field));
-    });
+    inquiryForm.noValidate = true;
+    attachFormValidation(inquiryForm);
 
     /* Render reCAPTCHA into the dynamically created widget */
     const recaptchaDiv = inquiryForm.querySelector('.g-recaptcha');
@@ -820,49 +809,5 @@ function initBlogPost() {
     </article>`;
 }
 
-/* ---- Input Sanitization ---- */
-function sanitizeInput(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-/* ---- Contact Form ---- */
-function initContactForm() {
-  const form = document.getElementById('contact-form');
-  if (!form) return;
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    /* Honeypot check — if filled, it's a bot */
-    const honeypot = form.querySelector('[name="website"]');
-    if (honeypot && honeypot.value) return;
-
-    /* Collect and sanitize form data */
-    const formData = new FormData(form);
-    const data = {};
-    for (const [key, value] of formData.entries()) {
-      if (key === 'website') continue; /* Skip honeypot field */
-      data[key] = sanitizeInput(value.trim());
-    }
-
-    /* Basic validation */
-    if (!data.name || !data.email || !data.message) {
-      alert('Please fill in all required fields.');
-      return;
-    }
-
-    /* Email format validation */
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
-      alert('Please enter a valid email address.');
-      return;
-    }
-
-    /* Replace with your form endpoint (Formspree, Netlify Forms, etc.) */
-    console.log('Form submission:', data);
-    alert('Thank you for your message! We\'ll get back to you within 24 hours.');
-    form.reset();
-  });
-}
+/* Contact, quote, and vehicle-inquiry forms submit natively to Netlify.
+   Validation is handled by initFormValidation()/validateContactForm() above. */

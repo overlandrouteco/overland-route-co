@@ -169,9 +169,9 @@
         <!-- Contact Form -->
         <div>
           <h2>Send Us a Message</h2>
-          <form id="contact-form" class="contact-form" name="contact" method="POST" novalidate data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
+          <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
             <input type="hidden" name="form-name" value="contact" />
-            <input type="hidden" name="bot-field" />
+            <div style="display:none"><input name="bot-field" /></div>
             <input type="hidden" name="submitted-from" value="contact" />
             <div class="form-group">
               <label for="name">Full Name *</label>
@@ -200,11 +200,6 @@
             <div class="form-group">
               <label for="message">Message *</label>
               <textarea id="message" name="message" required placeholder="Tell us about your project, the vehicle you're interested in, or how we can help..." maxlength="5000"></textarea>
-            </div>
-            <!-- Honeypot field — hidden from real users, catches spam bots -->
-            <div class="form-group" style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
-              <label for="website">Website</label>
-              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
             </div>
             <!-- Google reCAPTCHA v2 widget -->
             <!-- Replace with your reCAPTCHA site key from https://www.google.com/recaptcha/admin -->

@@ -196,9 +196,9 @@
   <!-- Static placeholder so Netlify Forms detects the dynamically rendered
        vehicle inquiry form at build time. The visible form is rendered by
        JS in js/main.js inside the vehicle detail modal. -->
-  <form name="vehicle-inquiry" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+  <form name="vehicle-inquiry" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html" hidden>
     <input type="hidden" name="form-name" value="vehicle-inquiry" />
-    <input type="text" name="bot-field" />
+    <div style="display:none"><input name="bot-field" /></div>
     <input type="text" name="name" />
     <input type="tel" name="phone" />
     <input type="email" name="email" />

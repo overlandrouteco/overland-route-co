@@ -162,9 +162,9 @@
       <div class="contact-grid">
         <div>
           <h2>Request a Quote</h2>
-          <form id="quote-form" class="contact-form" name="quote-request" method="POST" novalidate enctype="multipart/form-data" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
+          <form name="quote-request" method="POST" enctype="multipart/form-data" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
             <input type="hidden" name="form-name" value="quote-request" />
-            <input type="hidden" name="bot-field" />
+            <div style="display:none"><input name="bot-field" /></div>
             <input type="hidden" name="submitted-from" value="quote" />
             <div class="form-group">
               <label for="q-name">Full Name *</label>
@@ -244,11 +244,6 @@
                 <option value="referral">Friend / Referral</option>
                 <option value="other">Other</option>
               </select>
-            </div>
-            <!-- Honeypot -->
-            <div class="form-group" style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
-              <label for="q-website">Website</label>
-              <input type="text" id="q-website" name="website" tabindex="-1" autocomplete="off">
             </div>
             <!-- Google reCAPTCHA v2 widget -->
             <!-- Replace with your reCAPTCHA site key from https://www.google.com/recaptcha/admin -->
@@ -378,7 +373,7 @@
         if (desc) desc.value = 'I am interested in: ' + decodeURIComponent(productName) + '\n\n';
       }
 
-      var form = document.getElementById('quote-form');
+      var form = document.querySelector('form[name="quote-request"]');
       if (!form) return;
       /* Validate file constraints before letting Netlify handle the submission */
       form.addEventListener('submit', function(e) {
