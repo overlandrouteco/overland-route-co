@@ -595,7 +595,7 @@ function openVehicleModal(id) {
               <input type="hidden" name="vehicle" value="${v.title.replace(/"/g, '&quot;')}" />
               <input type="hidden" name="submitted-from" value="inventory" />
               <div class="form-group"><label>Name *</label><input type="text" name="name" required placeholder="Your name"></div>
-              <div class="form-group"><label>Phone *</label><input type="tel" name="phone" required pattern="[\\d\\s().+\\-]{10,}" placeholder="(555) 123-4567"></div>
+              <div class="form-group"><label>Phone *</label><input type="tel" name="phone" required placeholder="(555) 123-4567"></div>
               <div class="form-group"><label>Email *</label><input type="email" name="email" required pattern="[^@\\s]+@[^@\\s]+\\.[^@\\s]+" placeholder="you@example.com"></div>
               <div class="form-group"><label>Message *</label><textarea name="message" required placeholder="Tell us what you'd like to know...">I am interested in the ${v.title}. Please send me more information.</textarea></div>
               <!-- Google reCAPTCHA v2 -->
