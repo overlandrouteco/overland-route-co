@@ -603,6 +603,23 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.5rem); margin-bottom: 12px; }
   border-color: #c0392b;
   background: rgba(192,57,43,0.08);
 }
+/* JS-driven validation error states */
+.contact-form input.has-error,
+.contact-form textarea.has-error,
+.contact-form select.has-error,
+.newsletter-form input.has-error {
+  border-color: #c0392b !important;
+  background: rgba(192,57,43,0.08);
+}
+.field-error {
+  display: block;
+  color: #e74c3c;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 6px;
+  line-height: 1.4;
+}
+.recaptcha-wrap { margin: 16px 0 20px; }
 .contact-info-block { margin-bottom: 28px; }
 .contact-info-block h3 { font-size: 1rem; color: var(--accent); margin-bottom: 8px; }
 .contact-info-block p { color: var(--tan); font-size: 0.95rem; line-height: 1.7; }

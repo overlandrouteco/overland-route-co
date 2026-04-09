@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollHeader();
   initScrollIndicator();
   initFormValidationHighlight();
+  initFormValidation();
 
   /* Page-specific initializers */
   if (document.getElementById('featured-vehicles')) initFeaturedVehicles();
@@ -136,6 +137,132 @@ function initActiveNav() {
 function initFormValidationHighlight() {
   document.querySelectorAll('.contact-form, .newsletter-form').forEach(form => {
     form.addEventListener('submit', () => form.classList.add('was-submitted'));
+  });
+}
+
+/* ---- Custom Form Validation ----
+   Runs on submit for .contact-form elements (contact + quote forms).
+   Validates required fields, email format, phone format, and reCAPTCHA.
+   Shows inline red error messages and prevents submission on failure. */
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function clearFieldError(field) {
+  field.classList.remove('has-error');
+  const next = field.parentNode.querySelector('.field-error');
+  if (next) next.remove();
+}
+
+function showFieldError(field, msg) {
+  field.classList.add('has-error');
+  let err = field.parentNode.querySelector('.field-error');
+  if (!err) {
+    err = document.createElement('span');
+    err.className = 'field-error';
+    field.parentNode.appendChild(err);
+  }
+  err.textContent = msg;
+}
+
+function validateEmail(value) {
+  const v = value.trim();
+  if (!v) return false;
+  if (v.indexOf('@') === -1) return false;
+  if (!EMAIL_RE.test(v)) return false;
+  /* Reject domains without a dot (require valid TLD) */
+  const domain = v.split('@')[1] || '';
+  if (domain.indexOf('.') === -1) return false;
+  return true;
+}
+
+function validatePhone(value) {
+  /* Accept (650) 272-0334, 650-272-0334, 650.272.0334, 6502720334, +1 6502720334 */
+  const digits = value.replace(/\D/g, '');
+  return digits.length === 10 || digits.length === 11;
+}
+
+function validateContactForm(form) {
+  let valid = true;
+  let firstInvalid = null;
+
+  /* Clear previous errors */
+  form.querySelectorAll('.field-error').forEach(el => el.remove());
+  form.querySelectorAll('.has-error').forEach(el => el.classList.remove('has-error'));
+
+  /* Skip honeypot/hidden fields */
+  const fields = form.querySelectorAll('input, textarea, select');
+  fields.forEach(field => {
+    if (field.type === 'hidden') return;
+    if (field.name === 'bot-field' || field.name === 'website' || field.name === 'form-name') return;
+    /* Skip the honeypot wrapper (off-screen) */
+    const wrapper = field.closest('[aria-hidden="true"]');
+    if (wrapper) return;
+
+    const value = (field.value || '').trim();
+
+    if (field.required && !value) {
+      showFieldError(field, 'This field is required');
+      valid = false;
+      if (!firstInvalid) firstInvalid = field;
+      return;
+    }
+    if (field.type === 'email' && value) {
+      if (!validateEmail(value)) {
+        showFieldError(field, 'Please enter a valid email address');
+        valid = false;
+        if (!firstInvalid) firstInvalid = field;
+        return;
+      }
+    }
+    if (field.type === 'tel' && value) {
+      if (!validatePhone(value)) {
+        showFieldError(field, 'Please enter a valid phone number');
+        valid = false;
+        if (!firstInvalid) firstInvalid = field;
+        return;
+      }
+    }
+  });
+
+  /* reCAPTCHA validation */
+  const recaptcha = form.querySelector('.g-recaptcha');
+  if (recaptcha && typeof grecaptcha !== 'undefined') {
+    let response = '';
+    try { response = grecaptcha.getResponse(); } catch (e) { response = ''; }
+    if (!response) {
+      let err = recaptcha.parentNode.querySelector('.field-error');
+      if (!err) {
+        err = document.createElement('span');
+        err.className = 'field-error';
+        recaptcha.parentNode.appendChild(err);
+      }
+      err.textContent = 'Please complete the reCAPTCHA';
+      valid = false;
+      if (!firstInvalid) firstInvalid = recaptcha;
+    }
+  }
+
+  if (!valid && firstInvalid && firstInvalid.focus) {
+    firstInvalid.focus();
+    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  return valid;
+}
+
+function initFormValidation() {
+  document.querySelectorAll('.contact-form').forEach(form => {
+    form.addEventListener('submit', (e) => {
+      if (!validateContactForm(form)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    }, true); /* capture phase so this runs before other submit handlers */
+
+    /* Live-clear errors as the user fixes them */
+    form.querySelectorAll('input, textarea, select').forEach(field => {
+      field.addEventListener('input', () => clearFieldError(field));
+      field.addEventListener('change', () => clearFieldError(field));
+    });
   });
 }
 
