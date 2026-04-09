@@ -62,7 +62,9 @@
       <div class="contact-grid">
         <div>
           <h2>Request a Quote</h2>
-          <form id="quote-form" class="contact-form" novalidate>
+          <form id="quote-form" class="contact-form" name="quote-request" method="POST" enctype="multipart/form-data" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
+            <input type="hidden" name="form-name" value="quote-request" />
+            <input type="hidden" name="bot-field" />
             <div class="form-group">
               <label for="q-name">Full Name *</label>
               <input type="text" id="q-name" name="name" required placeholder="Your name">
@@ -231,8 +233,10 @@
       <!-- Connect to Mailchimp or email service later -->
       <div class="footer-newsletter">
         <p>Get notified when new vehicles drop and build tips straight to your inbox.</p>
-        <form class="newsletter-form" onsubmit="event.preventDefault();var e=this.querySelector('input').value;if(e){var s=JSON.parse(localStorage.getItem('newsletterSignups')||'[]');s.push({email:e,date:new Date().toISOString()});localStorage.setItem('newsletterSignups',JSON.stringify(s));this.querySelector('input').value='';alert('Thanks for subscribing!');}">
-          <input type="email" placeholder="Your email address" required>
+        <form class="newsletter-form" name="newsletter" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
+          <input type="hidden" name="form-name" value="newsletter" />
+          <input type="hidden" name="bot-field" />
+          <input type="email" name="email" placeholder="Your email address" required>
           <button type="submit" class="btn btn-primary" style="padding:10px 20px;">Subscribe</button>
         </form>
       </div>
@@ -269,36 +273,21 @@
 
       var form = document.getElementById('quote-form');
       if (!form) return;
+      /* Validate file constraints before letting Netlify handle the submission */
       form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        var hp = this.querySelector('[name="website"]');
-        if (hp && hp.value) return;
-        var fd = new FormData(this);
-        var data = {};
-        for (var pair of fd.entries()) {
-          if (pair[0] === 'website') continue;
-          if (pair[0] === 'files') continue;
-          data[pair[0]] = pair[1];
-        }
-        if (!data.name || !data.phone || !data.email || !data.description) {
-          alert('Please fill in all required fields (Name, Phone, Email, and Project Description).');
-          return;
-        }
-        /* Check file sizes */
         var fileInput = this.querySelector('[name="files"]');
         if (fileInput && fileInput.files.length > 3) {
+          e.preventDefault();
           alert('Please upload a maximum of 3 files.'); return;
         }
         if (fileInput) {
           for (var i = 0; i < fileInput.files.length; i++) {
             if (fileInput.files[i].size > 5 * 1024 * 1024) {
+              e.preventDefault();
               alert('Each file must be under 5MB. "' + fileInput.files[i].name + '" is too large.'); return;
             }
           }
         }
-        console.log('Quote request:', data);
-        alert('Thank you! We will review your request and get back to you within 24 hours.');
-        this.reset();
       });
     });
   </script>

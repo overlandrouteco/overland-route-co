@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('inventory-grid')) initInventory();
   if (document.getElementById('gallery-grid')) initGallery();
   if (document.getElementById('reviews-grid')) initReviews();
-  if (document.getElementById('contact-form')) initContactForm();
+  /* Contact form is now handled natively by Netlify Forms */
   if (document.getElementById('blog-listing')) initBlog();
   if (document.getElementById('blog-post-detail')) initBlogPost();
 });
