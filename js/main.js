@@ -372,11 +372,15 @@ function submitForm(form) {
   }
 
   /* Build a fresh hidden form and submit that. Guarantees no listeners
-     can intercept. */
+     can intercept. We mirror the Netlify form attributes onto the clone
+     and explicitly set action to /thank-you.html for the success redirect. */
   var formData = new FormData(form);
   var hiddenForm = document.createElement('form');
   hiddenForm.method = 'POST';
-  hiddenForm.action = form.action;
+  hiddenForm.action = '/thank-you.html';
+  hiddenForm.setAttribute('name', form.getAttribute('name') || '');
+  hiddenForm.setAttribute('data-netlify', 'true');
+  hiddenForm.setAttribute('data-netlify-honeypot', 'bot-field');
   hiddenForm.style.display = 'none';
   for (var pair of formData.entries()) {
     var input = document.createElement('input');
