@@ -120,6 +120,16 @@
     ]
   }
   </script>
+
+  <!-- Google Analytics - Replace G-XXXXXXXXXX with your real GA4 Measurement ID -->
+  <!-- To activate: Go to analytics.google.com, create a GA4 property, get your Measurement ID (G-XXXXXXXXXX), and replace the placeholder in every HTML file -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
 <body>
 
@@ -162,25 +172,28 @@
           <form id="contact-form" class="contact-form" name="contact" method="POST" novalidate data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
             <input type="hidden" name="form-name" value="contact" />
             <input type="hidden" name="bot-field" />
+            <input type="hidden" name="submitted-from" value="contact" />
             <div class="form-group">
               <label for="name">Full Name *</label>
               <input type="text" id="name" name="name" required placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone *</label>
+              <input type="tel" id="phone" name="phone" required pattern="[\d\s().+\-]{10,}" placeholder="(555) 123-4567">
             </div>
             <div class="form-group">
               <label for="email">Email *</label>
               <input type="email" id="email" name="email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="you@example.com">
             </div>
             <div class="form-group">
-              <label for="phone">Phone</label>
-              <input type="tel" id="phone" name="phone" pattern="[\d\s().+\-]{10,}" placeholder="(555) 123-4567">
-            </div>
-            <div class="form-group">
               <label for="subject">What Can We Help With?</label>
               <select id="subject" name="subject">
                 <option value="general">General Inquiry</option>
-                <option value="custom-build">Custom Build Consultation</option>
-                <option value="vehicle-purchase">Vehicle Purchase</option>
-                <option value="appraisal">Vehicle Appraisal</option>
+                <option value="vehicle-info">Vehicle Information</option>
+                <option value="product-question">Product Question</option>
+                <option value="build-consultation">Build Consultation</option>
+                <option value="vehicle-appraisal">Vehicle Appraisal</option>
+                <option value="trade-in">Trade-In</option>
                 <option value="other">Other</option>
               </select>
             </div>
@@ -284,6 +297,7 @@
         <p>Get notified when new vehicles drop and build tips straight to your inbox.</p>
         <form class="newsletter-form" name="newsletter" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
           <input type="hidden" name="form-name" value="newsletter" />
+          <input type="hidden" name="submitted-from" value="newsletter-contact" />
           <input type="hidden" name="bot-field" />
           <input type="email" name="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="Your email address" required>
           <button type="submit" class="btn btn-primary" style="padding:10px 20px;">Subscribe</button>
@@ -310,5 +324,32 @@
   </div>
 
   <script src="js/main.js" defer></script>
+
+  <!-- Pre-fill the contact form from URL parameters
+       (e.g. shop "Ask Us About This" → ?product=Foo, vehicle "Call for Pricing" → ?vehicle=Foo) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var params = new URLSearchParams(window.location.search);
+      var product = params.get('product');
+      var vehicle = params.get('vehicle');
+      var subjectParam = params.get('subject');
+      var msgEl = document.getElementById('message');
+      var subjectEl = document.getElementById('subject');
+
+      if (product && msgEl) {
+        msgEl.value = 'I am interested in the ' + decodeURIComponent(product) + '. Please send me more information.';
+        if (subjectEl) subjectEl.value = 'product-question';
+      } else if (vehicle && msgEl) {
+        msgEl.value = 'I am interested in the ' + decodeURIComponent(vehicle) + '. Please send me more information.';
+        if (subjectEl) subjectEl.value = 'vehicle-info';
+      }
+
+      /* Allow ?subject=trade-in / vehicle-appraisal / etc. to override */
+      if (subjectParam && subjectEl) {
+        var opt = subjectEl.querySelector('option[value="' + subjectParam + '"]');
+        if (opt) subjectEl.value = subjectParam;
+      }
+    });
+  </script>
 </body>
 </html>

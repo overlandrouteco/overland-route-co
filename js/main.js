@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollIndicator();
   initFormValidationHighlight();
   initFormValidation();
+  initAnalyticsTracking();
 
   /* Page-specific initializers */
   if (document.getElementById('featured-vehicles')) initFeaturedVehicles();
@@ -22,6 +23,80 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('blog-listing')) initBlog();
   if (document.getElementById('blog-post-detail')) initBlogPost();
 });
+
+/* ---- Google Analytics Event Tracking ----
+   To activate: Go to analytics.google.com, create a GA4 property, get your
+   Measurement ID (G-XXXXXXXXXX), and replace the placeholder in every HTML file.
+   Until then trackEvent() is a safe no-op (it checks for window.gtag). */
+function trackEvent(name, params) {
+  try {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', name, params || {});
+    }
+  } catch (e) { /* ignore */ }
+}
+
+function initAnalyticsTracking() {
+  /* Click tracking — delegated so it covers dynamically rendered cards */
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('a, button');
+    if (!target) return;
+    const text = (target.textContent || '').trim().toLowerCase();
+    const href = target.getAttribute('href') || '';
+
+    if (target.classList.contains('call-for-pricing-btn') || text === 'call for pricing') {
+      trackEvent('click_call_for_pricing', {
+        vehicle: target.dataset.vehicleName || '',
+        link_url: href
+      });
+    } else if (target.classList.contains('view-details-btn') || text === 'view details') {
+      trackEvent('click_view_details', { vehicle: target.dataset.vehicleName || '' });
+    } else if (text === 'check price on amazon') {
+      trackEvent('click_check_price_amazon', { product: target.previousElementSibling?.textContent || '', link_url: href });
+    } else if (target.classList.contains('ask-us-btn') || text === 'ask us about this') {
+      trackEvent('click_ask_us_about_this', {
+        product: target.dataset.productName || '',
+        category: target.dataset.productCategory || ''
+      });
+    } else if (text === 'get a quote' || text === 'get a free quote' || (href && href.indexOf('quote.html') !== -1 && target.classList.contains('nav-cta'))) {
+      trackEvent('click_get_a_quote', { link_url: href });
+    }
+
+    /* Shop product category filter clicks */
+    if (target.parentElement && target.parentElement.id === 'shop-filters') {
+      trackEvent('shop_category_click', { category: target.dataset.filter || target.textContent });
+    }
+  });
+
+  /* Form submission tracking — fires only for forms that pass validation */
+  document.querySelectorAll('form[data-netlify="true"]').forEach(form => {
+    form.addEventListener('submit', () => {
+      /* Skip if our validator already blocked it (form will not actually submit) */
+      if (form.querySelector('.has-error')) return;
+      trackEvent('form_submit', {
+        form_name: form.getAttribute('name') || 'unknown',
+        submitted_from: (form.querySelector('[name="submitted-from"]') || {}).value || ''
+      });
+    });
+  });
+
+  /* Scroll depth tracking — fire once at 25/50/75/100% */
+  const milestones = [25, 50, 75, 100];
+  const fired = {};
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const scrollTop = window.scrollY || doc.scrollTop;
+    const max = doc.scrollHeight - window.innerHeight;
+    if (max <= 0) return;
+    const pct = Math.round((scrollTop / max) * 100);
+    milestones.forEach(m => {
+      if (pct >= m && !fired[m]) {
+        fired[m] = true;
+        trackEvent('scroll_depth', { percent: m, page: window.location.pathname });
+      }
+    });
+  }, { passive: true });
+}
 
 /* ---- Mobile Navigation ---- */
 function initMobileNav() {
@@ -287,32 +362,9 @@ function initCookieBanner() {
 }
 
 function enableAnalytics() {
-  /*
-   * ============================================
-   * GOOGLE ANALYTICS
-   * Replace 'G-XXXXXXXXXX' with your GA4 Measurement ID
-   * ============================================
-   */
-  const GA_ID = 'G-XXXXXXXXXX'; // <-- YOUR TRACKING ID HERE
-  if (GA_ID === 'G-XXXXXXXXXX') return; // Skip if placeholder
-
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  document.head.appendChild(script);
-
-  script.onload = () => {
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    window.gtag = gtag;
-    gtag('js', new Date());
-    gtag('config', GA_ID);
-  };
-}
-
-/* Load analytics on returning visitors who accepted */
-if (localStorage.getItem('cookieConsent') === 'accepted') {
-  enableAnalytics();
+  /* GA4 is now loaded directly from the <head> of every page (placeholder
+     G-XXXXXXXXXX). This function is kept as a no-op to preserve the cookie
+     banner click handler — see initCookieBanner. */
 }
 
 /* ---- Helper: format mileage ---- */
@@ -421,8 +473,8 @@ function vehicleCardHTML(v) {
           ${v.features.slice(0, 4).map(f => `<span>${f}</span>`).join('')}
         </div>
         <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
-          <a href="tel:+16502720334" class="btn btn-primary" style="flex:1;padding:10px 16px;font-size:0.85rem;text-align:center;min-width:120px;">Call for Pricing</a>
-          <button class="btn btn-outline view-details-btn" data-id="${v.id}" style="flex:1;padding:10px 16px;font-size:0.85rem;min-width:120px;">View Details</button>
+          <a href="contact.html?vehicle=${encodeURIComponent(v.title)}" class="btn btn-primary call-for-pricing-btn" data-vehicle-name="${v.title}" style="flex:1;padding:10px 16px;font-size:0.85rem;text-align:center;min-width:120px;">Call for Pricing</a>
+          <button class="btn btn-outline view-details-btn" data-id="${v.id}" data-vehicle-name="${v.title}" style="flex:1;padding:10px 16px;font-size:0.85rem;min-width:120px;">View Details</button>
         </div>
       </div>
     </article>`;
@@ -508,12 +560,20 @@ function openVehicleModal(id) {
         ${v.status === 'for-sale' ? `
           <div class="vehicle-inquiry">
             <h3>Interested? Get More Info</h3>
-            <form class="contact-form" onsubmit="event.preventDefault();var hp=this.querySelector('[name=website]');if(hp&&hp.value)return;alert('Thank you! We will get back to you within 24 hours.');this.reset();">
+            <form class="contact-form vehicle-inquiry-form" name="vehicle-inquiry" method="POST" novalidate data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
+              <input type="hidden" name="form-name" value="vehicle-inquiry" />
+              <input type="hidden" name="bot-field" />
+              <input type="hidden" name="vehicle" value="${v.title.replace(/"/g, '&quot;')}" />
+              <input type="hidden" name="submitted-from" value="inventory" />
               <div class="form-group"><label>Name *</label><input type="text" name="name" required placeholder="Your name"></div>
-              <div class="form-group"><label>Phone</label><input type="tel" name="phone" placeholder="(555) 123-4567"></div>
-              <div class="form-group"><label>Email *</label><input type="email" name="email" required placeholder="you@example.com"></div>
-              <div class="form-group"><label>Message</label><textarea name="message" placeholder="I am interested in this vehicle...">${v.title}</textarea></div>
+              <div class="form-group"><label>Phone *</label><input type="tel" name="phone" required pattern="[\\d\\s().+\\-]{10,}" placeholder="(555) 123-4567"></div>
+              <div class="form-group"><label>Email *</label><input type="email" name="email" required pattern="[^@\\s]+@[^@\\s]+\\.[^@\\s]+" placeholder="you@example.com"></div>
+              <div class="form-group"><label>Message *</label><textarea name="message" required placeholder="Tell us what you'd like to know...">I am interested in the ${v.title}. Please send me more information.</textarea></div>
               <div style="position:absolute;left:-9999px;" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+              <!-- Google reCAPTCHA v2 -->
+              <div class="form-group recaptcha-wrap">
+                <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
+              </div>
               <div class="inquiry-actions">
                 <button type="submit" class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem;">Send Inquiry</button>
                 <a href="tel:+16502720334" class="btn btn-outline" style="padding:10px 20px;font-size:0.85rem;">Call Now</a>
@@ -531,6 +591,47 @@ function openVehicleModal(id) {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeVehicleModal();
   });
+
+  /* Wire up the dynamically inserted vehicle inquiry form for validation
+     and reCAPTCHA. Forms inserted after DOMContentLoaded are not picked up
+     by initFormValidation, so we attach handlers here. */
+  const inquiryForm = modal.querySelector('.vehicle-inquiry-form');
+  if (inquiryForm) {
+    inquiryForm.addEventListener('submit', (e) => {
+      if (!validateContactForm(inquiryForm)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      } else {
+        trackEvent('form_submit', { form_name: 'vehicle-inquiry', vehicle: v.title });
+      }
+    }, true);
+    inquiryForm.querySelectorAll('input, textarea, select').forEach(field => {
+      field.addEventListener('input', () => clearFieldError(field));
+      field.addEventListener('change', () => clearFieldError(field));
+    });
+
+    /* Render reCAPTCHA into the dynamically created widget */
+    const recaptchaDiv = inquiryForm.querySelector('.g-recaptcha');
+    if (recaptchaDiv) renderRecaptchaWhenReady(recaptchaDiv);
+  }
+
+  trackEvent('view_vehicle_details', { vehicle: v.title, vehicle_id: v.id });
+}
+
+/* Retry-render a g-recaptcha element until grecaptcha is loaded */
+function renderRecaptchaWhenReady(div, attempts) {
+  attempts = attempts || 0;
+  if (attempts > 50) return; /* give up after ~10s */
+  if (window.grecaptcha && typeof grecaptcha.render === 'function') {
+    /* Avoid double-render: skip if already rendered */
+    if (div.dataset.rendered === 'true') return;
+    try {
+      grecaptcha.render(div, { sitekey: '6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx' });
+      div.dataset.rendered = 'true';
+    } catch (e) { /* swallow — may already be rendered by auto-init */ }
+  } else {
+    setTimeout(() => renderRecaptchaWhenReady(div, attempts + 1), 200);
+  }
 }
 
 function closeVehicleModal() {

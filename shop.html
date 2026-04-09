@@ -148,6 +148,16 @@
     ]
   }
   </script>
+
+  <!-- Google Analytics - Replace G-XXXXXXXXXX with your real GA4 Measurement ID -->
+  <!-- To activate: Go to analytics.google.com, create a GA4 property, get your Measurement ID (G-XXXXXXXXXX), and replace the placeholder in every HTML file -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
 <body>
 
@@ -249,6 +259,7 @@
         <p>Get notified when new vehicles drop and build tips straight to your inbox.</p>
         <form class="newsletter-form" name="newsletter" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
           <input type="hidden" name="form-name" value="newsletter" />
+          <input type="hidden" name="submitted-from" value="newsletter-shop" />
           <input type="hidden" name="bot-field" />
           <input type="email" name="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="Your email address" required>
           <button type="submit" class="btn btn-primary" style="padding:10px 20px;">Subscribe</button>
@@ -307,7 +318,7 @@
                 : `<div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
                     <!-- Replace with Amazon affiliate link -->
                     <a href="${p.buyLink}" class="btn btn-primary" style="flex:1;padding:10px 12px;font-size:0.8rem;text-align:center;min-width:130px;" target="_blank" rel="noopener noreferrer nofollow">Check Price on Amazon</a>
-                    <a href="quote.html?product=${encodeURIComponent(p.name)}" class="btn btn-outline" style="flex:1;padding:10px 12px;font-size:0.8rem;text-align:center;min-width:130px;">Ask Us About This</a>
+                    <a href="contact.html?product=${encodeURIComponent(p.name)}&category=${encodeURIComponent(p.category)}" class="btn btn-outline ask-us-btn" data-product-name="${p.name}" data-product-category="${p.category}" style="flex:1;padding:10px 12px;font-size:0.8rem;text-align:center;min-width:130px;">Ask Us About This</a>
                   </div>`}
             </div>
           </article>

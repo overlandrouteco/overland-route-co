@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://placehold.co data:; connect-src 'self' https://www.google-analytics.com; frame-src https://www.youtube-nocookie.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://placehold.co data:; connect-src 'self' https://www.google-analytics.com; frame-src https://www.youtube-nocookie.com https://www.google.com;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
@@ -30,6 +30,10 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Google reCAPTCHA v2 (used by the dynamic vehicle inquiry form in the modal) -->
+  <!-- To get your own reCAPTCHA keys go to https://www.google.com/recaptcha/admin and register your domain overlandrouteco.com -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
   <!-- Schema.org Vehicle listings (actual inventory) -->
   <script type="application/ld+json">
@@ -176,8 +180,32 @@
     ]
   }
   </script>
+
+  <!-- Google Analytics - Replace G-XXXXXXXXXX with your real GA4 Measurement ID -->
+  <!-- To activate: Go to analytics.google.com, create a GA4 property, get your Measurement ID (G-XXXXXXXXXX), and replace the placeholder in every HTML file -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
 <body>
+
+  <!-- Static placeholder so Netlify Forms detects the dynamically rendered
+       vehicle inquiry form at build time. The visible form is rendered by
+       JS in js/main.js inside the vehicle detail modal. -->
+  <form name="vehicle-inquiry" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="vehicle-inquiry" />
+    <input type="text" name="bot-field" />
+    <input type="text" name="name" />
+    <input type="tel" name="phone" />
+    <input type="email" name="email" />
+    <textarea name="message"></textarea>
+    <input type="text" name="vehicle" />
+    <input type="text" name="submitted-from" />
+  </form>
 
   <header class="header" role="banner">
     <div class="container header-inner">
@@ -337,6 +365,7 @@
         <p>Get notified when new vehicles drop and build tips straight to your inbox.</p>
         <form class="newsletter-form" name="newsletter" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
           <input type="hidden" name="form-name" value="newsletter" />
+          <input type="hidden" name="submitted-from" value="newsletter-inventory" />
           <input type="hidden" name="bot-field" />
           <input type="email" name="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="Your email address" required>
           <button type="submit" class="btn btn-primary" style="padding:10px 20px;">Subscribe</button>
