@@ -235,7 +235,7 @@ function validateContactForm(form) {
         err.className = 'field-error';
         recaptcha.parentNode.appendChild(err);
       }
-      err.textContent = 'Please complete the reCAPTCHA';
+      err.textContent = 'Please confirm you are not a robot';
       valid = false;
       if (!firstInvalid) firstInvalid = recaptcha;
     }
