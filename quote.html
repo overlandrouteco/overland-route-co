@@ -250,7 +250,7 @@
             <div class="form-group recaptcha-wrap">
               <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;padding:16px;">Submit Request</button>
+            <button type="button" onclick="handleSubmit(this.closest('form'))" class="btn btn-primary" style="width:100%;padding:16px;">Submit Request</button>
           </form>
         </div>
         <div>
@@ -364,33 +364,15 @@
 
   <script src="js/main.js" defer></script>
   <script>
+    /* Pre-fill from URL params (e.g., ?product=Winch). File validation is
+       handled in handleSubmit() in js/main.js. */
     document.addEventListener('DOMContentLoaded', function() {
-      /* Pre-fill from URL params (e.g., ?product=Winch) */
       var params = new URLSearchParams(window.location.search);
       var productName = params.get('product');
       if (productName) {
         var desc = document.getElementById('q-description');
         if (desc) desc.value = 'I am interested in: ' + decodeURIComponent(productName) + '\n\n';
       }
-
-      var form = document.querySelector('form[name="quote-request"]');
-      if (!form) return;
-      /* Validate file constraints before letting Netlify handle the submission */
-      form.addEventListener('submit', function(e) {
-        var fileInput = this.querySelector('[name="files"]');
-        if (fileInput && fileInput.files.length > 3) {
-          e.preventDefault();
-          alert('Please upload a maximum of 3 files.'); return;
-        }
-        if (fileInput) {
-          for (var i = 0; i < fileInput.files.length; i++) {
-            if (fileInput.files[i].size > 5 * 1024 * 1024) {
-              e.preventDefault();
-              alert('Each file must be under 5MB. "' + fileInput.files[i].name + '" is too large.'); return;
-            }
-          }
-        }
-      });
     });
   </script>
 </body>

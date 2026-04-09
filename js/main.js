@@ -67,11 +67,12 @@ function initAnalyticsTracking() {
     }
   });
 
-  /* Form submission tracking — fires only for forms that pass validation */
-  document.querySelectorAll('form[data-netlify="true"]').forEach(form => {
+  /* Form submission tracking is fired from handleSubmit() before form.submit(),
+     because form.submit() does not dispatch the submit event. Newsletter forms
+     (which don't go through handleSubmit) are still tracked via the submit
+     event since they submit natively without preventDefault. */
+  document.querySelectorAll('form.newsletter-form').forEach(form => {
     form.addEventListener('submit', () => {
-      /* Skip if our validator already blocked it (form will not actually submit) */
-      if (form.querySelector('.has-error')) return;
       trackEvent('form_submit', {
         form_name: form.getAttribute('name') || 'unknown',
         submitted_from: (form.querySelector('[name="submitted-from"]') || {}).value || ''
@@ -314,32 +315,58 @@ function validateContactForm(form) {
 }
 
 function initFormValidation() {
-  /* Select Netlify message forms by their form name. The form tags themselves
-     stay clean (no class, no novalidate) so Netlify form detection works
-     reliably. We set noValidate at runtime so HTML5 native validation does
-     not block our custom validation. */
+  /* Select Netlify message forms by their form name. We set noValidate so
+     HTML5 native validation does not interfere. We do NOT attach a submit
+     event listener — submission happens via the button's onclick → handleSubmit
+     pattern, which calls form.submit() directly after validation passes. */
   document.querySelectorAll('form[name="contact"], form[name="quote-request"], form[name="vehicle-inquiry"]').forEach(form => {
     form.noValidate = true;
-    attachFormValidation(form);
+    attachFieldErrorClearing(form);
   });
 }
 
-function attachFormValidation(form) {
-  form.addEventListener('submit', (e) => {
-    /* validateContactForm returns true to allow native submission to Netlify,
-       false to block. We only call preventDefault on validation failure. */
-    if (validateContactForm(form) !== true) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-    }
-  }, true); /* capture phase so this runs before other submit handlers */
-
+function attachFieldErrorClearing(form) {
   /* Live-clear errors as the user fixes them */
   form.querySelectorAll('input, textarea, select').forEach(field => {
     field.addEventListener('input', () => clearFieldError(field));
     field.addEventListener('change', () => clearFieldError(field));
   });
 }
+
+/* Called from the submit button's onclick (type="button"). Runs validation,
+   then calls form.submit() so the browser performs a native POST that
+   Netlify Forms intercepts. form.submit() does NOT fire submit events, so
+   nothing else can preventDefault it. */
+function handleSubmit(form) {
+  if (!form) return false;
+  if (!validateContactForm(form)) return false;
+
+  /* Quote form: enforce file count/size limits */
+  const fileInput = form.querySelector('input[type="file"]');
+  if (fileInput && fileInput.files && fileInput.files.length > 0) {
+    if (fileInput.files.length > 3) {
+      alert('Please upload a maximum of 3 files.');
+      return false;
+    }
+    for (let i = 0; i < fileInput.files.length; i++) {
+      if (fileInput.files[i].size > 5 * 1024 * 1024) {
+        alert('Each file must be under 5MB. "' + fileInput.files[i].name + '" is too large.');
+        return false;
+      }
+    }
+  }
+
+  /* Track the submission before navigating away */
+  trackEvent('form_submit', {
+    form_name: form.getAttribute('name') || 'unknown',
+    submitted_from: (form.querySelector('[name="submitted-from"]') || {}).value || ''
+  });
+
+  form.submit();
+  return true;
+}
+/* Expose for inline onclick handlers */
+window.handleSubmit = handleSubmit;
 
 /* ---- Cookie Consent ---- */
 function initCookieBanner() {
@@ -574,7 +601,7 @@ function openVehicleModal(id) {
                 <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
               </div>
               <div class="inquiry-actions">
-                <button type="submit" class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem;">Send Inquiry</button>
+                <button type="button" onclick="handleSubmit(this.closest('form'))" class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem;">Send Inquiry</button>
                 <a href="tel:+16502720334" class="btn btn-outline" style="padding:10px 20px;font-size:0.85rem;">Call Now</a>
               </div>
             </form>
@@ -592,12 +619,12 @@ function openVehicleModal(id) {
   });
 
   /* Wire up the dynamically inserted vehicle inquiry form for validation
-     and reCAPTCHA. Forms inserted after DOMContentLoaded are not picked up
-     by initFormValidation, so we attach handlers here. */
+     and reCAPTCHA. The form is submitted via its button's onclick=handleSubmit,
+     so we only need to set noValidate and attach live error-clearing here. */
   const inquiryForm = modal.querySelector('form[name="vehicle-inquiry"]');
   if (inquiryForm) {
     inquiryForm.noValidate = true;
-    attachFormValidation(inquiryForm);
+    attachFieldErrorClearing(inquiryForm);
 
     /* Render reCAPTCHA into the dynamically created widget */
     const recaptchaDiv = inquiryForm.querySelector('.g-recaptcha');
