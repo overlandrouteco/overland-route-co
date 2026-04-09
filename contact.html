@@ -16,14 +16,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <!-- Security Headers -->
-  <!-- CSP meta tag temporarily removed for Netlify form submission testing.
-       It was setting default-src 'self' with no explicit form-action, which
-       falls back to 'self' and was blocking the Netlify form POST in some
-       browsers. Restore via _headers or netlify.toml once submissions work. -->
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Contact Us — Overland Route Co.">
@@ -33,9 +25,9 @@
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Google reCAPTCHA v2 - TEMPORARILY DISABLED for Netlify form testing -->
+  <!-- Google reCAPTCHA v2 -->
   <!-- To get your own reCAPTCHA keys go to https://www.google.com/recaptcha/admin and register your domain overlandrouteco.com -->
-  <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <!-- Schema.org LocalBusiness -->
   <script type="application/ld+json">
   {
@@ -203,12 +195,10 @@
               <label for="message">Message *</label>
               <textarea id="message" name="message" required placeholder="Tell us about your project, the vehicle you're interested in, or how we can help..." maxlength="5000"></textarea>
             </div>
-            <!-- Google reCAPTCHA v2 widget - TEMPORARILY DISABLED for Netlify form testing -->
-            <!--
+            <!-- Google reCAPTCHA v2 widget -->
             <div class="form-group recaptcha-wrap">
               <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
             </div>
-            -->
             <button type="submit" class="btn btn-primary">SEND MESSAGE</button>
           </form>
         </div>

@@ -16,9 +16,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://placehold.co data:; connect-src 'self' https://www.google-analytics.com; frame-src https://www.youtube-nocookie.com https://www.google.com;">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Get a Quote — Overland Route Co.">
   <meta name="twitter:description" content="Request a free consultation for your custom overland build.">
@@ -175,7 +172,7 @@
             </div>
             <div class="form-group">
               <label for="q-email">Email *</label>
-              <input type="email" id="q-email" name="email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="you@example.com">
+              <input type="email" id="q-email" name="email" required placeholder="you@example.com">
             </div>
             <div class="form-group">
               <label for="q-service">Service Type</label>
@@ -249,7 +246,7 @@
             <div class="form-group recaptcha-wrap">
               <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
             </div>
-            <button type="button" onclick="handleSubmit(this.closest('form'))" class="btn btn-primary" style="width:100%;padding:16px;">Submit Request</button>
+            <button type="submit" class="btn btn-primary" style="width:100%;padding:16px;">Submit Request</button>
           </form>
         </div>
         <div>
@@ -363,8 +360,8 @@
 
   <script src="js/main.js" defer></script>
   <script>
-    /* Pre-fill from URL params (e.g., ?product=Winch). File validation is
-       handled in handleSubmit() in js/main.js. */
+    /* Pre-fill from URL params (e.g., ?product=Winch). File and field
+       validation is handled in validateContactForm() in js/main.js. */
     document.addEventListener('DOMContentLoaded', function() {
       var params = new URLSearchParams(window.location.search);
       var productName = params.get('product');
