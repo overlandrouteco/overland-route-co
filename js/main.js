@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTextUsButton();
   initScrollHeader();
   initScrollIndicator();
+  initFormValidationHighlight();
 
   /* Page-specific initializers */
   if (document.getElementById('featured-vehicles')) initFeaturedVehicles();
@@ -125,6 +126,16 @@ function initActiveNav() {
     if (href === currentPage || (currentPage === '' && href === 'index.html')) {
       link.classList.add('active');
     }
+  });
+}
+
+/* ---- Form Validation Highlight ----
+   Adds a `was-submitted` class on submit attempt so :invalid styles
+   apply only after the user has tried to submit (fallback for browsers
+   without :user-invalid). */
+function initFormValidationHighlight() {
+  document.querySelectorAll('.contact-form, .newsletter-form').forEach(form => {
+    form.addEventListener('submit', () => form.classList.add('was-submitted'));
   });
 }
 

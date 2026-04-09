@@ -587,6 +587,22 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.5rem); margin-bottom: 12px; }
 }
 .contact-form input:focus, .contact-form textarea:focus, .contact-form select:focus { outline: none; border-color: var(--accent); }
 .contact-form textarea { min-height: 140px; resize: vertical; }
+/* Highlight required fields after the user has interacted with the form */
+.contact-form input:user-invalid,
+.contact-form textarea:user-invalid,
+.contact-form select:user-invalid,
+.newsletter-form input:user-invalid {
+  border-color: #c0392b;
+  background: rgba(192,57,43,0.08);
+}
+/* Fallback for browsers without :user-invalid — only apply after submit attempt */
+.contact-form.was-submitted input:invalid,
+.contact-form.was-submitted textarea:invalid,
+.contact-form.was-submitted select:invalid,
+.newsletter-form.was-submitted input:invalid {
+  border-color: #c0392b;
+  background: rgba(192,57,43,0.08);
+}
 .contact-info-block { margin-bottom: 28px; }
 .contact-info-block h3 { font-size: 1rem; color: var(--accent); margin-bottom: 8px; }
 .contact-info-block p { color: var(--tan); font-size: 0.95rem; line-height: 1.7; }
