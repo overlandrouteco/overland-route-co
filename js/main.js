@@ -68,9 +68,8 @@ function initAnalyticsTracking() {
   });
 
   /* Newsletter form submission tracking. The contact / quote / vehicle-inquiry
-     forms are tracked from inside attachFormValidation()'s submit listener
-     (after validation passes). Newsletter forms have no JS validation, so we
-     track them with a separate listener here. */
+     forms are tracked from inside submitForm() before the cloned form POSTs.
+     Newsletter forms submit natively with no JS, so we track them here. */
   document.querySelectorAll('form.newsletter-form').forEach(form => {
     form.addEventListener('submit', () => {
       trackEvent('form_submit', {
@@ -332,30 +331,17 @@ function validateContactForm(form) {
 }
 
 function initFormValidation() {
-  /* Netlify message forms — submit-button + native submit listener pattern.
-     We set noValidate so HTML5 native validation doesn't fire its own
-     bubbles, then call validateContactForm in a submit listener. If
-     validation fails we preventDefault; if it passes, the form submits
-     natively to Netlify (no form.submit() trickery). */
+  /* Netlify message forms. The submit button is type="button" with an
+     onclick that calls submitForm() — there are NO submit event listeners
+     attached anywhere. We only set noValidate (so HTML5 native bubbles
+     don't fire) and attach live error-clearing on input. */
   document.querySelectorAll('form[name="contact-form"], form[name="quote-request"], form[name="vehicle-inquiry"]').forEach(form => {
     form.noValidate = true;
-    attachFormValidation(form);
+    attachFieldErrorClearing(form);
   });
 }
 
-function attachFormValidation(form) {
-  form.addEventListener('submit', (e) => {
-    if (validateContactForm(form) !== true) {
-      e.preventDefault();
-      return;
-    }
-    /* Validation passed — track the submission, then let the browser POST */
-    trackEvent('form_submit', {
-      form_name: form.getAttribute('name') || 'unknown',
-      submitted_from: (form.querySelector('[name="submitted-from"]') || {}).value || ''
-    });
-  });
-
+function attachFieldErrorClearing(form) {
   /* Live-clear errors as the user fixes them */
   form.querySelectorAll('input, textarea, select').forEach(field => {
     field.addEventListener('input', () => clearFieldError(field));
@@ -363,12 +349,47 @@ function attachFormValidation(form) {
   });
 }
 
-function attachFieldErrorClearing(form) {
-  form.querySelectorAll('input, textarea, select').forEach(field => {
-    field.addEventListener('input', () => clearFieldError(field));
-    field.addEventListener('change', () => clearFieldError(field));
+/* Called from the submit button's onclick. Validates the form, then submits
+   it via a freshly-created hidden form so that no event listeners on the
+   original form can possibly intercept the POST. */
+function submitForm(form) {
+  if (!form) return;
+  if (!validateContactForm(form)) return;
+
+  /* Track the submission before navigating away */
+  trackEvent('form_submit', {
+    form_name: form.getAttribute('name') || 'unknown',
+    submitted_from: (form.querySelector('[name="submitted-from"]') || {}).value || ''
   });
+
+  /* If the form has a file input, we can't use the clone approach
+     (FormData File entries become "[object File]" strings when stored on a
+     hidden input's value, losing the binary). Submit the original form's
+     native submit() — safe because no submit event listeners are attached. */
+  if (form.querySelector('input[type="file"]')) {
+    form.submit();
+    return;
+  }
+
+  /* Build a fresh hidden form and submit that. Guarantees no listeners
+     can intercept. */
+  var formData = new FormData(form);
+  var hiddenForm = document.createElement('form');
+  hiddenForm.method = 'POST';
+  hiddenForm.action = form.action;
+  hiddenForm.style.display = 'none';
+  for (var pair of formData.entries()) {
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = pair[0];
+    input.value = pair[1];
+    hiddenForm.appendChild(input);
+  }
+  document.body.appendChild(hiddenForm);
+  hiddenForm.submit();
 }
+/* Expose for inline onclick handlers */
+window.submitForm = submitForm;
 
 /* ---- Cookie Consent ---- */
 function initCookieBanner() {
@@ -603,7 +624,7 @@ function openVehicleModal(id) {
                 <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
               </div>
               <div class="inquiry-actions">
-                <button type="submit" class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem;">Send Inquiry</button>
+                <button type="button" onclick="submitForm(this.closest('form'))" class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem;">Send Inquiry</button>
                 <a href="tel:+16502720334" class="btn btn-outline" style="padding:10px 20px;font-size:0.85rem;">Call Now</a>
               </div>
             </form>
@@ -620,13 +641,13 @@ function openVehicleModal(id) {
     if (e.target === modal) closeVehicleModal();
   });
 
-  /* Wire up the dynamically inserted vehicle inquiry form. Forms inserted
-     after DOMContentLoaded are not picked up by initFormValidation, so we
-     attach the same submit-listener validation here. */
+  /* Wire up the dynamically inserted vehicle inquiry form. The submit
+     button calls submitForm() via inline onclick, so we only need to set
+     noValidate and attach live error-clearing here. */
   const inquiryForm = modal.querySelector('form[name="vehicle-inquiry"]');
   if (inquiryForm) {
     inquiryForm.noValidate = true;
-    attachFormValidation(inquiryForm);
+    attachFieldErrorClearing(inquiryForm);
 
     /* Render reCAPTCHA into the dynamically created widget */
     const recaptchaDiv = inquiryForm.querySelector('.g-recaptcha');
