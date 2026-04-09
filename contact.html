@@ -25,9 +25,8 @@
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Google reCAPTCHA v2 -->
-  <!-- To get your own reCAPTCHA keys go to https://www.google.com/recaptcha/admin and register your domain overlandrouteco.com -->
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <!-- Google reCAPTCHA v2 - TEMPORARILY DISABLED while we confirm Netlify form submission -->
+  <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
   <!-- Schema.org LocalBusiness -->
   <script type="application/ld+json">
   {
@@ -195,11 +194,13 @@
               <label for="message">Message *</label>
               <textarea id="message" name="message" required placeholder="Tell us about your project, the vehicle you're interested in, or how we can help..." maxlength="5000"></textarea>
             </div>
-            <!-- Google reCAPTCHA v2 widget -->
+            <!-- Google reCAPTCHA v2 widget - TEMPORARILY DISABLED while we confirm Netlify form submission -->
+            <!--
             <div class="form-group recaptcha-wrap">
               <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
             </div>
-            <button type="button" class="btn btn-primary" onclick="submitForm(this.closest('form'))">SEND MESSAGE</button>
+            -->
+            <button type="submit" class="btn btn-primary">SEND MESSAGE</button>
           </form>
         </div>
 

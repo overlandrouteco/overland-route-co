@@ -331,69 +331,12 @@ function validateContactForm(form) {
 }
 
 function initFormValidation() {
-  /* Netlify message forms. The submit button is type="button" with an
-     onclick that calls submitForm() — there are NO submit event listeners
-     attached anywhere. We only set noValidate (so HTML5 native bubbles
-     don't fire) and attach live error-clearing on input. */
-  document.querySelectorAll('form[name="contact-form"], form[name="quote-request"], form[name="vehicle-inquiry"]').forEach(form => {
-    form.noValidate = true;
-    attachFieldErrorClearing(form);
-  });
+  /* TEMPORARILY DISABLED. The contact-form, quote-request, and
+     vehicle-inquiry forms are submitting natively to Netlify with zero
+     JavaScript touching them. validateContactForm() below is preserved
+     as dead code so we can re-wire it once all forms are confirmed working
+     in the Netlify dashboard. */
 }
-
-function attachFieldErrorClearing(form) {
-  /* Live-clear errors as the user fixes them */
-  form.querySelectorAll('input, textarea, select').forEach(field => {
-    field.addEventListener('input', () => clearFieldError(field));
-    field.addEventListener('change', () => clearFieldError(field));
-  });
-}
-
-/* Called from the submit button's onclick. Validates the form, then submits
-   it via a freshly-created hidden form so that no event listeners on the
-   original form can possibly intercept the POST. */
-function submitForm(form) {
-  if (!form) return;
-  if (!validateContactForm(form)) return;
-
-  /* Track the submission before navigating away */
-  trackEvent('form_submit', {
-    form_name: form.getAttribute('name') || 'unknown',
-    submitted_from: (form.querySelector('[name="submitted-from"]') || {}).value || ''
-  });
-
-  /* If the form has a file input, we can't use the clone approach
-     (FormData File entries become "[object File]" strings when stored on a
-     hidden input's value, losing the binary). Submit the original form's
-     native submit() — safe because no submit event listeners are attached. */
-  if (form.querySelector('input[type="file"]')) {
-    form.submit();
-    return;
-  }
-
-  /* Build a fresh hidden form and submit that. Guarantees no listeners
-     can intercept. We mirror the Netlify form attributes onto the clone
-     and explicitly set action to /thank-you.html for the success redirect. */
-  var formData = new FormData(form);
-  var hiddenForm = document.createElement('form');
-  hiddenForm.method = 'POST';
-  hiddenForm.action = '/thank-you.html';
-  hiddenForm.setAttribute('name', form.getAttribute('name') || '');
-  hiddenForm.setAttribute('data-netlify', 'true');
-  hiddenForm.setAttribute('data-netlify-honeypot', 'bot-field');
-  hiddenForm.style.display = 'none';
-  for (var pair of formData.entries()) {
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = pair[0];
-    input.value = pair[1];
-    hiddenForm.appendChild(input);
-  }
-  document.body.appendChild(hiddenForm);
-  hiddenForm.submit();
-}
-/* Expose for inline onclick handlers */
-window.submitForm = submitForm;
 
 /* ---- Cookie Consent ---- */
 function initCookieBanner() {
@@ -623,12 +566,9 @@ function openVehicleModal(id) {
               <div class="form-group"><label>Phone *</label><input type="tel" name="phone" required placeholder="(555) 123-4567"></div>
               <div class="form-group"><label>Email *</label><input type="email" name="email" required placeholder="you@example.com"></div>
               <div class="form-group"><label>Message *</label><textarea name="message" required placeholder="Tell us what you'd like to know...">I am interested in the ${v.title}. Please send me more information.</textarea></div>
-              <!-- Google reCAPTCHA v2 -->
-              <div class="form-group recaptcha-wrap">
-                <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
-              </div>
+              <!-- Google reCAPTCHA v2 - TEMPORARILY DISABLED while we confirm Netlify form submission -->
               <div class="inquiry-actions">
-                <button type="button" onclick="submitForm(this.closest('form'))" class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem;">Send Inquiry</button>
+                <button type="submit" class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem;">Send Inquiry</button>
                 <a href="tel:+16502720334" class="btn btn-outline" style="padding:10px 20px;font-size:0.85rem;">Call Now</a>
               </div>
             </form>
@@ -645,18 +585,9 @@ function openVehicleModal(id) {
     if (e.target === modal) closeVehicleModal();
   });
 
-  /* Wire up the dynamically inserted vehicle inquiry form. The submit
-     button calls submitForm() via inline onclick, so we only need to set
-     noValidate and attach live error-clearing here. */
-  const inquiryForm = modal.querySelector('form[name="vehicle-inquiry"]');
-  if (inquiryForm) {
-    inquiryForm.noValidate = true;
-    attachFieldErrorClearing(inquiryForm);
-
-    /* Render reCAPTCHA into the dynamically created widget */
-    const recaptchaDiv = inquiryForm.querySelector('.g-recaptcha');
-    if (recaptchaDiv) renderRecaptchaWhenReady(recaptchaDiv);
-  }
+  /* Vehicle inquiry form: zero JavaScript touching it for now. Submits
+     natively to Netlify via its type="submit" button. The reCAPTCHA widget
+     in the template is also commented out while we confirm submissions land. */
 
   trackEvent('view_vehicle_details', { vehicle: v.title, vehicle_id: v.id });
 }
