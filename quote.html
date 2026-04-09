@@ -22,9 +22,9 @@
   <meta name="twitter:image" content="https://overlandrouteco.com/images/og-quote.jpg">
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Google reCAPTCHA v2 -->
-  <!-- To get your own reCAPTCHA keys go to https://www.google.com/recaptcha/admin and register your domain overlandrouteco.com -->
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <!-- Google reCAPTCHA v2 - DISABLED. Using Netlify's built-in reCAPTCHA via
+       data-netlify-recaptcha="true" on the form instead — no external script needed. -->
+  <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
   <!-- Schema.org LocalBusiness -->
   <script type="application/ld+json">
   {
@@ -158,7 +158,7 @@
       <div class="contact-grid">
         <div>
           <h2>Request a Quote</h2>
-          <form name="quote-request" method="POST" enctype="multipart/form-data" data-netlify="true" data-netlify-honeypot="bot-field" action="/thank-you.html">
+          <form name="quote-request" method="POST" enctype="multipart/form-data" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true" action="/thank-you.html">
             <input type="hidden" name="form-name" value="quote-request" />
             <div style="display:none"><input name="bot-field" /></div>
             <input type="hidden" name="submitted-from" value="quote" />
@@ -241,10 +241,9 @@
                 <option value="other">Other</option>
               </select>
             </div>
-            <!-- Google reCAPTCHA v2 widget -->
-            <!-- Replace with your reCAPTCHA site key from https://www.google.com/recaptcha/admin -->
+            <!-- Netlify built-in reCAPTCHA — Netlify renders the widget here at runtime -->
             <div class="form-group recaptcha-wrap">
-              <div class="g-recaptcha" data-sitekey="6LfvVK8sAAAAAGmEGo6Gd8XlfM1yL1ginllduNgx"></div>
+              <div data-netlify-recaptcha="true"></div>
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%;padding:16px;">Submit Request</button>
           </form>

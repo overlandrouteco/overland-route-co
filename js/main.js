@@ -326,9 +326,9 @@ function validateContactForm(form) {
 }
 
 function initFormValidation() {
-  /* Contact form only — quote-request and vehicle-inquiry are still
-     submitting natively without JS while we confirm they land in Netlify. */
-  document.querySelectorAll('form[name="contact-form"]').forEach(form => {
+  /* Contact and quote forms — vehicle-inquiry is still bare while we
+     confirm those submissions land in Netlify. */
+  document.querySelectorAll('form[name="contact-form"], form[name="quote-request"]').forEach(form => {
     form.noValidate = true;
 
     form.addEventListener('submit', (e) => {
