@@ -596,10 +596,85 @@ form[name="contact-form"] input:focus, form[name="contact-form"] textarea:focus,
 form[name="quote-request"] input:focus, form[name="quote-request"] textarea:focus, form[name="quote-request"] select:focus,
 form[name="vehicle-inquiry"] input:focus, form[name="vehicle-inquiry"] textarea:focus, form[name="vehicle-inquiry"] select:focus {
   outline: none; border-color: var(--accent);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 3px rgba(196,118,43,0.15);
 }
 form[name="contact-form"] textarea,
 form[name="quote-request"] textarea,
-form[name="vehicle-inquiry"] textarea { min-height: 140px; resize: vertical; }
+form[name="vehicle-inquiry"] textarea { min-height: 140px; resize: vertical; font-family: inherit; }
+/* Placeholder — softer tan on the dark background */
+form[name="contact-form"] input::placeholder,
+form[name="contact-form"] textarea::placeholder,
+form[name="quote-request"] input::placeholder,
+form[name="quote-request"] textarea::placeholder,
+form[name="vehicle-inquiry"] input::placeholder,
+form[name="vehicle-inquiry"] textarea::placeholder,
+.newsletter-form input::placeholder {
+  color: rgba(212,169,106,0.45);
+}
+/* Select dropdown options — force dark background (browsers default to white) */
+form[name="contact-form"] select,
+form[name="quote-request"] select,
+form[name="vehicle-inquiry"] select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path fill='%23c4762b' d='M6 8L0 0h12z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 10px 7px;
+  padding-right: 40px;
+  cursor: pointer;
+}
+form[name="contact-form"] select option,
+form[name="quote-request"] select option,
+form[name="vehicle-inquiry"] select option {
+  background: var(--primary);
+  color: var(--text);
+}
+/* File input — dashed dropzone matching the dark theme */
+form[name="quote-request"] input[type="file"] {
+  padding: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed rgba(212,169,106,0.3);
+  border-radius: 6px;
+  color: var(--tan);
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+form[name="quote-request"] input[type="file"]:hover {
+  border-color: rgba(196,118,43,0.5);
+  background: rgba(255,255,255,0.05);
+}
+form[name="quote-request"] input[type="file"]::file-selector-button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin-right: 14px;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s;
+}
+form[name="quote-request"] input[type="file"]::file-selector-button:hover {
+  background: #b36424;
+}
+/* Submit button spacing inside message forms */
+form[name="contact-form"] > button[type="submit"],
+form[name="quote-request"] > button[type="submit"],
+form[name="vehicle-inquiry"] button[type="submit"] {
+  margin-top: 8px;
+}
+/* Radio buttons (quote form contact-method) */
+form[name="quote-request"] input[type="radio"] {
+  width: auto;
+  accent-color: var(--accent);
+}
 /* Highlight required fields after the user has interacted with the form */
 form[name="contact-form"] input:user-invalid,
 form[name="contact-form"] textarea:user-invalid,
@@ -647,14 +722,29 @@ form[name="vehicle-inquiry"] select.has-error,
   align-items: flex-start;
   gap: 8px;
 }
-.recaptcha-wrap .g-recaptcha {
-  /* The widget is a fixed-width iframe; allow it to scroll on very narrow screens */
+/* Matches both vanilla Google reCAPTCHA (.g-recaptcha) and the
+   Netlify built-in widget ([data-netlify-recaptcha="true"]) */
+.recaptcha-wrap .g-recaptcha,
+.recaptcha-wrap [data-netlify-recaptcha="true"] {
   max-width: 100%;
   overflow: hidden;
 }
 .recaptcha-wrap .field-error { margin-top: 4px; }
+/* The reCAPTCHA iframe is fixed at 304px. Scale it down progressively
+   on narrow screens so it doesn't overflow the form container. */
+@media (max-width: 420px) {
+  .recaptcha-wrap { padding: 12px; }
+  .recaptcha-wrap .g-recaptcha,
+  .recaptcha-wrap [data-netlify-recaptcha="true"] {
+    transform: scale(0.9);
+    transform-origin: 0 0;
+  }
+}
 @media (max-width: 360px) {
-  .recaptcha-wrap .g-recaptcha { transform: scale(0.85); transform-origin: 0 0; }
+  .recaptcha-wrap .g-recaptcha,
+  .recaptcha-wrap [data-netlify-recaptcha="true"] {
+    transform: scale(0.82);
+  }
 }
 .contact-info-block { margin-bottom: 28px; }
 .contact-info-block h3 { font-size: 1rem; color: var(--accent); margin-bottom: 8px; }
@@ -1010,6 +1100,15 @@ form[name="vehicle-inquiry"] select.has-error,
   .modal-gallery img { height: 220px; min-width: 300px; }
 }
 
+/* Quote form vehicle grid — 2 columns on tablet, 1 column on phones.
+   Placed outside the existing 480/768 blocks because source order matters
+   with desktop-first media queries (smaller max-width must come later). */
+@media (max-width: 768px) {
+  .contact-grid [style*="grid-template-columns:1fr 1fr 1fr"],
+  .contact-grid [style*="grid-template-columns: 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
 @media (max-width: 480px) {
   .hero-buttons { flex-direction: column; align-items: center; }
   .hero-buttons .btn { width: 100%; max-width: 280px; text-align: center; }
@@ -1019,5 +1118,14 @@ form[name="vehicle-inquiry"] select.has-error,
   .ig-feed-grid { grid-template-columns: repeat(3, 1fr); }
   .ba-grid { grid-template-columns: 1fr; }
   .resources-grid { grid-template-columns: 1fr; }
-  .contact-grid [style*="grid-template-columns: 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; }
+  /* Quote form vehicle grid stacks fully on phones (inline style has no
+     space after the colon, so both selectors are needed) */
+  .contact-grid [style*="grid-template-columns:1fr 1fr 1fr"],
+  .contact-grid [style*="grid-template-columns: 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Slightly smaller form text on phones for density */
+  form[name="contact-form"],
+  form[name="quote-request"],
+  form[name="vehicle-inquiry"] { font-size: 0.95rem; }
 }
